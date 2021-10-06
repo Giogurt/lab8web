@@ -12,7 +12,9 @@ class ProductHelper {
 
     if (this.product.childSkus !== undefined) {
         this.product.childSkus.forEach( (sku) => {
-            colors.push(sku.color);
+            if (!colors.includes(sku.color)) {
+              colors.push(sku.color);
+            }
         });
     }
 

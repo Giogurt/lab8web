@@ -18,8 +18,11 @@ import React from "react";
 interface ProductInfoProps {
   product: Product;
   colors: string[];
+  sizes: string[];
   selectedColor: string;
+  selectedSize: string;
   changedColor(event: any): void
+  changedSize(event: any): void
 }
 
 /**
@@ -45,12 +48,7 @@ const ProductInfo : React.FC<ProductInfoProps>  = (props) => {
     colors.push(<option value={color}>{color}</option>);
   }); 
 
-  var selectedSize = "";
-  if (props.product !== undefined && props.product.childSkus !== undefined) {
-    selectedSize = props.product.childSkus[0].size;
-    props.product.childSkus.forEach( (sku) => {
-      sizes.push(<MenuItem value={sku.size}>{sku.size}</MenuItem>);
-    }); 
+  if (props.product !== undefined && props.product.childSkus !== undefined) { 
 
     props.product.comments.forEach( (comment) => {
       comments.push(
@@ -121,7 +119,7 @@ const ProductInfo : React.FC<ProductInfoProps>  = (props) => {
             <InputLabel className="productLabel" id="size-label">
               Size
             </InputLabel>
-            <Select labelId="size-label" id="size-select" label="Size" value={selectedSize}>
+            <Select labelId="size-label" id="size-select" native={true} label="Size" value={props.selectedSize} onChange={props.changedColor}>
               {sizes}
             </Select>
           </Grid>
