@@ -1,38 +1,53 @@
 import Product from "../types/Product";
+import Sku from "../types/Sku";
 
 class ProductHelper {
   product: Product;
 
   constructor(product: Product) {
-      this.product = product;
+    this.product = product;
   }
 
-  getColors() : string[] {
+  getColors(): string[] {
     let colors = [] as string[];
 
     if (this.product.childSkus !== undefined) {
-        this.product.childSkus.forEach( (sku) => {
-            if (!colors.includes(sku.color)) {
-              colors.push(sku.color);
-            }
-        });
+      this.product.childSkus.forEach((sku) => {
+        if (!colors.includes(sku.color)) {
+          colors.push(sku.color);
+        }
+      });
     }
 
-    return colors;   
+    return colors;
   }
 
-  getSizes(color : string) : string[] {
+  getSizes(color: string): string[] {
     let sizes = [] as string[];
 
     if (this.product.childSkus !== undefined) {
-        this.product.childSkus.forEach( (sku) => {
-            if (sku.color === color) {
-                sizes.push(sku.size);
-            }
-        });
+      this.product.childSkus.forEach((sku) => {
+        if (sku.color === color) {
+          sizes.push(sku.size);
+        }
+      });
     }
 
-    return sizes;   
+    return sizes;
+  }
+
+  getSku(color: string, size: string): Sku {
+    let currentSku = {} as Sku;
+    if (this.product.childSkus !== undefined) {
+      this.product.childSkus.forEach((sku) => {
+        if (sku.color === color && sku.size === size) {
+          currentSku = sku;
+          return sku;
+        }
+      });
+    }
+
+    return currentSku;
   }
 }
 

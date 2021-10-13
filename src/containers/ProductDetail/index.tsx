@@ -46,6 +46,7 @@ class ProductDetail extends React.Component<{}, ProductState> {
         sizes={this.state.sizes}
         selectedSize={this.state.selectedSize}
         changedSize={this.changedSize}
+        addToCart={this.addToCart}
       />
     );
   }
@@ -62,22 +63,31 @@ class ProductDetail extends React.Component<{}, ProductState> {
         const helper = new ProductHelper(product);
         const colors = helper.getColors();
         let sizes = [] as string[];
-        let selectedColor = ""
-        let selectedSize = ""
+        let selectedColor = "";
+        let selectedSize = "";
 
         if (colors.length >= 1) {
           sizes = helper.getSizes(colors[0]);
           selectedColor = colors[0];
-          
+
           if (sizes.length >= 1) {
             selectedSize = sizes[0];
           }
         }
 
-
         console.log("Sizes: " + sizes);
 
-        this.setState({ product, helper, colors, sizes, selectedColor, selectedSize });
+        const sku = helper.getSku(selectedColor, selectedSize);
+
+        this.setState({
+          product,
+          helper,
+          colors,
+          sizes,
+          selectedColor,
+          selectedSize,
+          sku,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -87,11 +97,22 @@ class ProductDetail extends React.Component<{}, ProductState> {
   changedColor = (event: any) => {
     let target = event.currentTarget as HTMLSelectElement;
     let value = target.value;
-
+    const helper = this.state.helper;
+    let selectedSize = "";
     console.log("selectedColor: " + value);
+
+    const sizes = helper.getSizes(value);
+    if (sizes.length >= 1) {
+      selectedSize = sizes[0];
+    }
+
+    const sku = helper.getSku(value, selectedSize);
 
     this.setState({
       selectedColor: value,
+      sizes,
+      selectedSize,
+      sku,
     });
   };
 
@@ -101,9 +122,17 @@ class ProductDetail extends React.Component<{}, ProductState> {
 
     console.log("selectedSize: " + value);
 
+    const helper = this.state.helper;
+    const sku = helper.getSku(this.state.selectedColor, value);
+
     this.setState({
       selectedSize: value,
+      sku,
     });
+  };
+
+  addToCart = (event: any) => {
+    console.log(this.state.sku);
   };
 }
 
